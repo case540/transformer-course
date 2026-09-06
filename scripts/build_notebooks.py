@@ -40,6 +40,9 @@ one valid solution."""),
 
 
 def notebook(cells: list[dict]) -> dict:
+    # Stable cell IDs are required by modern nbformat and make notebook diffs cleaner.
+    for index, cell in enumerate(cells):
+        cell["id"] = f"cell-{index:03d}"
     return {
         "cells": cells,
         "metadata": {
