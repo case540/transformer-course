@@ -1,0 +1,6 @@
+torch>=2.2
+numpy>=1.24
+matplotlib>=3.7
+tensorboard>=2.15
+jupyterlab>=4.0
+nbclient>=0.9
