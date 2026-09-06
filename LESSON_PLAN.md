@@ -4,7 +4,10 @@
 
 This series assumes no machine-learning experience and only beginning Python.
 Readers familiar with R get short translations for indexing, dictionaries,
-comprehensions, classes, tensor shapes, and mutation. Every lesson uses this loop:
+comprehensions, classes, tensor shapes, broadcasting, binding/stacking, tuple
+unpacking, iterators, random state, device movement, and mutation. These “R bridge”
+notes appear beside the Python that motivates them instead of in a separate glossary.
+Every lesson uses this loop:
 
 1. Explain the concept and why it exists.
 2. Show the relevant PyTorch API and tensor shapes.
@@ -80,4 +83,3 @@ in the bidirectional model.
 
 Do not rush to maximize quality. Change one hyperparameter at a time, record the
 result, and explain the observation before running another experiment.
-

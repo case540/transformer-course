@@ -155,6 +155,16 @@ else:
 )
 
 TEXT_CELLS += [
+    md("""#### R bridge — `enumerate`, sets, and dictionary comprehensions
+
+`set(text)` keeps unique characters, like `unique(strsplit(text, "")[[1]])` in R.
+Python's `enumerate(chars)` yields `(0, first_character)`, `(1,
+second_character)`, and so on—similar to iterating over `seq_along(chars)` in R,
+except indexes begin at 0. `{ch: i for i, ch in enumerate(chars)}` constructs a
+dictionary; a close R equivalent is `setNames(seq_along(chars) - 1, chars)`.
+
+Be careful with braces: `{...}` is usually a dictionary or set in Python, not a
+code block as it is in R."""),
     md("""## 2. Encode, decode, and split
 
 Encoding is a deterministic data transformation, not something learned. We turn
@@ -180,6 +190,15 @@ else:
     assert decode(encode(probe)) == probe
     print("🟢 Round trip passed:", repr(decode(encode("ROMEO"))))""",
 )
+TEXT_CELLS += [
+    md("""#### R bridge — Python slices are half-open
+
+For `data[a:b]`, Python includes position `a` and excludes `b`. In R, the closest
+translation is `data[(a + 1):b]` because R starts at 1 and includes both endpoints.
+Python's `data[:n]` means indexes `0, ..., n-1`, exactly `head(data, n)` in R;
+`data[n:]` starts with Python index `n`, which is element `n + 1` in R. Half-open
+slices make adjacent pieces such as `data[:n]` and `data[n:]` meet without overlap."""),
+]
 TEXT_CELLS += exercise(
     "make train/validation/test tensors",
     "Encode the text once, then take contiguous 80%, 10%, and 10% slices. Use dtype `torch.long`.",
@@ -232,6 +251,17 @@ else:
     print("🟢 Batch shape:", tuple(xb.shape), "| first pair:", xb[0,:5].tolist(), yb[0,:5].tolist())""",
 )
 TEXT_CELLS += [
+    md("""#### R bridge — stacking, dimensions, and device transfer
+
+`torch.stack(windows)` creates a **new** dimension, like simplifying a list of
+equal-length R vectors with `do.call(rbind, windows)`. By contrast, `torch.cat`
+joins along an existing dimension, like `c()`, `rbind()`, or `cbind()` depending on
+`dim`. PyTorch uses `dim=0` for the first axis; R's first matrix margin is 1.
+
+`.to(device)` returns a tensor stored on CPU, Apple MPS, or CUDA. Base R normally
+does not expose this location. Every tensor involved in one operation—and the
+model—must be on the same device. Assign or return the result: `x.to(device)` does
+not move `x` in place."""),
     md("""## 4. What attention computes
 
 For every token representation `x`, learned linear layers create a **query** (what
@@ -273,6 +303,26 @@ guess loss is `ln(vocab_size)` and perplexity is `exp(loss)`.
 
 Reference: [`TransformerEncoderLayer`](https://docs.pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html),
 [`CrossEntropyLoss`](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html)"""),
+    md("""#### R bridge — classes, `self`, and calling a model
+
+`class TinyCausalTransformer(nn.Module)` defines a reusable object type, loosely
+comparable to an R6 class. `__init__` is its constructor, and `self` is the current
+instance—similar to R6's `self`. Assigning `self.layer = ...` registers trainable
+submodules; a local `layer = ...` would not become part of the saved model.
+
+Calling `model(x)` invokes PyTorch's module machinery, which then calls
+`model.forward(x)`. Do not normally call `forward` directly: the outer call also
+supports hooks and other framework behavior."""),
+    md("""#### R bridge — broadcasting and `None` inside an index
+
+If token embeddings have shape `(B,T,C)` and positions have `(T,C)`, PyTorch
+**broadcasting** reuses the positions across all `B` examples. Writing
+`positions[None, :, :]` explicitly inserts a size-1 batch axis, producing `(1,T,C)`.
+This resembles `array(positions, dim=c(1,T,C))` followed by R-style recycling, but
+broadcasting aligns dimensions from the right and has stricter compatibility rules.
+
+Here `None` does not mean missing data: inside `[]`, it means “insert a new axis.”
+`unsqueeze(0)` is the equivalent PyTorch method."""),
 ]
 
 TEXT_CELLS += exercise(
@@ -311,6 +361,16 @@ validation/test data.
 Reference: [`AdamW`](https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html),
 [`clip_grad_norm_`](https://docs.pytorch.org/docs/stable/generated/torch.nn.utils.clip_grad_norm_.html),
 [TensorBoard](https://docs.pytorch.org/tutorials/recipes/recipes/tensorboard_with_pytorch.html)"""),
+    md("""#### R bridge — gradients and mutation in the training loop
+
+Unlike ordinary statistical fitting in R, PyTorch separates gradient calculation
+from parameter updates. `loss.backward()` fills each parameter's `.grad` field as a
+side effect; `optimizer.step()` mutates parameter values. Gradients accumulate by
+default, so `zero_grad()` is required before the next batch.
+
+`model.train()` and `model.eval()` also mutate the model's mode; they do not fit or
+evaluate by themselves. The names can be surprising to R users: actual prediction
+happens only when you subsequently call `model(x)`."""),
 ]
 
 TEXT_CELLS += exercise(
@@ -574,6 +634,14 @@ else:
 )
 
 REG_CELLS += [
+    md("""#### R bridge — split objects and reproducible random state
+
+`random_split` returns lightweight `Subset` objects containing references and row
+indexes; it does not copy all tensors. This is similar to retaining integer row
+indexes and later using `data[train_rows, ]` in R. A dedicated
+`torch.Generator().manual_seed(SEED)` is like setting a local random stream: the
+split stays reproducible without depending on every other random draw in the
+notebook."""),
     md("""## 2. Preprocessing without leakage
 
 Features measured in different units can make optimization difficult. Standardize
@@ -601,6 +669,15 @@ else:
 )
 
 REG_CELLS += [
+    md("""#### R bridge — `cat`, `stack`, and axis numbering
+
+`torch.cat([x1, x2], dim=0)` appends existing rows, like `rbind(x1, x2)` in R.
+`torch.stack([y1, y2])` introduces a new axis, like collecting scalar values into a
+vector or binding equal arrays along a new margin. PyTorch axis `dim=0` corresponds
+to R's first dimension; `dim=1` corresponds to R's second.
+
+`tensor.mean(0)` computes one mean for each column by reducing axis 0, comparable to
+`colMeans(matrix)`—not R's `apply(matrix, 1, mean)`."""),
     md("""## 3. Padding, masks, and DataLoader
 
 A minibatch tensor must be rectangular, but sequence lengths differ. We pad shorter
@@ -635,6 +712,17 @@ else:
 )
 
 REG_CELLS += [
+    md("""#### R bridge — unpacking `zip(*)` and Boolean masks
+
+For a batch like `[(x1,y1), (x2,y2)]`, `xs, ys = zip(*batch)` transposes the nested
+structure into `(x1,x2)` and `(y1,y2)`. It is conceptually close to
+`Map(list, ...)`/`purrr::transpose()`, though Python's leading `*` means “unpack
+these elements as separate arguments.”
+
+Boolean indexing is familiar from R, but the convention here matters: mask value
+`True` means **ignore/padding**, not keep. `~mask` negates every Boolean, like `!mask`
+in R. PyTorch uses `&` and `|` elementwise; Python words `and`/`or` do not combine
+whole tensors."""),
     md("""## 4. Encoder regression architecture
 
 Numeric vectors do not use a token lookup table. A linear **input projection** maps
@@ -649,6 +737,16 @@ There is no causal attention mask. We pass only `src_key_padding_mask`.
 
 Reference: [`TransformerEncoderLayer`](https://docs.pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html),
 [`MSELoss`](https://docs.pytorch.org/docs/stable/generated/torch.nn.MSELoss.html)"""),
+    md("""#### R bridge — shape-changing methods
+
+`unsqueeze(-1)` adds a final size-1 dimension, while `squeeze(-1)` removes that
+dimension only if its size is 1. Negative axes count from the end, so `-1` means
+the last axis. Base R equivalents are usually explicit `array(..., dim=...)` or
+`drop()`, but R's automatic dimension dropping can be more aggressive.
+
+`reshape(-1, V)` asks PyTorch to infer the `-1` dimension. There may be only one
+inferred dimension. This is analogous to computing one array extent from
+`length(x)` and the known extents in R."""),
 ]
 
 REG_CELLS += exercise(
@@ -708,6 +806,17 @@ validation loss and stops after `patience` unimproved epochs. Test remains untou
 
 TensorBoard records loss and learning rate. Residual plots later show whether errors
 are centered randomly or reveal bias/nonlinearity/unequal variance."""),
+    md("""#### R bridge — iterators, tuple unpacking, and context managers
+
+`for x, y, mask in loader` repeatedly asks the DataLoader for a batch and unpacks
+the returned tuple. It resembles looping over a list of three-element lists in R,
+but Python can assign all three names directly. `iter(loader)` creates an iterator;
+`next(...)` retrieves one batch without running the whole loop.
+
+`with torch.no_grad():` is a context manager: operations in its indented block use
+temporary settings, which are restored afterward. A rough R analogue is
+`withr::with_options(...)`, though here the setting controls automatic
+differentiation rather than global options."""),
     md("""# Answer key — complete runnable implementation
 
 The independent `ans_` pipeline below includes splitting, scaling, collating,
