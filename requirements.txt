@@ -4,3 +4,4 @@ matplotlib>=3.7
 tensorboard>=2.15
 jupyterlab>=4.0
 nbclient>=0.9
+gensim>=4.3

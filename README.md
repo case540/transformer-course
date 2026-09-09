@@ -11,10 +11,10 @@ learning, neural networks, and transformers with PyTorch.
 2. `notebooks/02_bidirectional_transformer_regression.ipynb` — synthetic sequence
    regression, feature scaling, train/validation/test splits, padding masks,
    bidirectional self-attention, regression metrics, baselines, and residual analysis.
-3. `notebooks/03_transformer_from_components.ipynb` — an advanced-high-school-level
-   look inside one transformer: hand-worked Q/K/V examples, attention matrices,
-   causal masking, multiple heads, residuals, normalization, feed-forward networks,
-   and a tiny language model assembled from those pieces.
+3. `notebooks/03_transformer_from_components.ipynb` — a visual, intentionally
+   simple look inside attention using three words, 2D embeddings, `Q = K = V`,
+   hand-worked dot products, attention percentages, causal masking, a tiny block,
+   and an optional visualization of real pretrained GloVe embeddings.
 
 Read [`LESSON_PLAN.md`](LESSON_PLAN.md) for the teaching sequence and learning
 objectives.

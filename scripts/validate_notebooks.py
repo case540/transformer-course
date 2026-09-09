@@ -24,7 +24,7 @@ for path in files:
         assert phrase.lower() in markdown.lower(), f"{path.name}: missing {phrase}"
     exercises = sum("exercise" in c.get("metadata", {}).get("tags", []) for c in nb["cells"])
     checks = sum("check" in c.get("metadata", {}).get("tags", []) for c in nb["cells"])
-    assert exercises >= 5 and checks == exercises
+    assert exercises >= 4 and checks == exercises
     for index, cell in enumerate(nb["cells"]):
         if cell["cell_type"] != "code" or "skip-validation" in cell.get("metadata", {}).get("tags", []):
             continue

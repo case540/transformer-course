@@ -85,13 +85,12 @@ in the bidirectional model.
 
 **Question:** What exactly happens inside one transformer block?
 
-This advanced-high-school-level lesson uses tiny, printable matrices and a four-token
-sentence. Students calculate and visualize token/position embeddings, Q/K/V linear
-projections, dot-product scores, scaling, causal masking, softmax, weighted values,
-head splitting/joining, residual paths, LayerNorm, and the feed-forward network.
-They then assemble one block and a tiny causal language model without using
-`nn.Transformer`, finishing with an overfit-one-batch sanity test and learned
-attention heatmaps.
+This visual lesson starts with a three-word sentence and 2D vectors. It deliberately
+sets `Q = K = V = embeddings`, then teaches dot-product scores, scaling, softmax
+percentages, weighted values, causal masking, a residual path, LayerNorm, and one
+tiny feed-forward network. Vocabulary size and embedding width are visibly
+different. An optional GloVe/PCA demo shows geometry from real pretrained word
+embeddings. Learned Q/K/V projections appear only as a short optional extension.
 
 Suggested placement: use Notebook 3 after the data/tokenization portions of Notebook
 1 but before its architecture exercise—or complete it independently as a detailed
