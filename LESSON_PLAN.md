@@ -81,5 +81,21 @@ in the bidirectional model.
 - Session 4 (60 min): regression data, preprocessing, and baselines.
 - Session 5 (90 min): encoder regression, evaluation, and experiments.
 
+## Notebook 3 — a transformer from components
+
+**Question:** What exactly happens inside one transformer block?
+
+This advanced-high-school-level lesson uses tiny, printable matrices and a four-token
+sentence. Students calculate and visualize token/position embeddings, Q/K/V linear
+projections, dot-product scores, scaling, causal masking, softmax, weighted values,
+head splitting/joining, residual paths, LayerNorm, and the feed-forward network.
+They then assemble one block and a tiny causal language model without using
+`nn.Transformer`, finishing with an overfit-one-batch sanity test and learned
+attention heatmaps.
+
+Suggested placement: use Notebook 3 after the data/tokenization portions of Notebook
+1 but before its architecture exercise—or complete it independently as a detailed
+attention laboratory.
+
 Do not rush to maximize quality. Change one hyperparameter at a time, record the
 result, and explain the observation before running another experiment.

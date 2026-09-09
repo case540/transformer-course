@@ -1,6 +1,6 @@
 # Transformers from First Principles
 
-Two bite-sized, exercise-driven notebooks for learning Python, general machine
+Three bite-sized, exercise-driven notebooks for learning Python, general machine
 learning, neural networks, and transformers with PyTorch.
 
 ## Lessons
@@ -11,6 +11,10 @@ learning, neural networks, and transformers with PyTorch.
 2. `notebooks/02_bidirectional_transformer_regression.ipynb` — synthetic sequence
    regression, feature scaling, train/validation/test splits, padding masks,
    bidirectional self-attention, regression metrics, baselines, and residual analysis.
+3. `notebooks/03_transformer_from_components.ipynb` — an advanced-high-school-level
+   look inside one transformer: hand-worked Q/K/V examples, attention matrices,
+   causal masking, multiple heads, residuals, normalization, feed-forward networks,
+   and a tiny language model assembled from those pieces.
 
 Read [`LESSON_PLAN.md`](LESSON_PLAN.md) for the teaching sequence and learning
 objectives.
@@ -41,7 +45,7 @@ tensorboard --logdir runs
 
 ## Run in Google Colab
 
-Upload or open either `.ipynb` file in Colab, then choose **Runtime → Run all**.
+Upload or open any `.ipynb` file in Colab, then choose **Runtime → Run all**.
 PyTorch is preinstalled. For faster training choose **Runtime → Change runtime
 type → T4 GPU**. Files in a Colab session are temporary; download checkpoints or
 mount Google Drive if you want to keep them.
@@ -61,4 +65,3 @@ python scripts/validate_notebooks.py
 
 The validator checks notebook JSON, required sections, answer keys, and code-cell
 syntax without doing a full training run.
-
