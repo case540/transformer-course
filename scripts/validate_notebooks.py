@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 files = sorted((ROOT / "notebooks").glob("*.ipynb"))
-assert len(files) == 3, f"Expected three notebooks, found {len(files)}"
+assert len(files) == 4, f"Expected four notebooks, found {len(files)}"
 
 
 def source_text(cell):

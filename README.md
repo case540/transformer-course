@@ -1,6 +1,6 @@
 # Transformers from First Principles
 
-Three bite-sized, exercise-driven notebooks for learning Python, general machine
+Four bite-sized, exercise-driven notebooks for learning Python, general machine
 learning, neural networks, and transformers with PyTorch.
 
 ## Lessons
@@ -15,6 +15,9 @@ learning, neural networks, and transformers with PyTorch.
    simple look inside attention using three words, 2D embeddings, `Q = K = V`,
    hand-worked dot products, attention percentages, causal masking, a tiny block,
    and an optional visualization of real pretrained GloVe embeddings.
+4. `notebooks/04_first_dnn_next_word.ipynb` — a first dense neural network that
+   memorizes tiny chants, with token and position embeddings, exact API hints,
+   training visualizations, and next-word generation.
 
 Read [`LESSON_PLAN.md`](LESSON_PLAN.md) for the teaching sequence and learning
 objectives.

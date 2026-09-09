@@ -81,6 +81,17 @@ in the bidirectional model.
 - Session 4 (60 min): regression data, preprocessing, and baselines.
 - Session 5 (90 min): encoder regression, evaluation, and experiments.
 
+## Notebook 4 — first DNN for next-word prediction
+
+**Question:** Can a one-hidden-layer neural network finish tiny chants?
+
+A 16-word vocabulary forms patterns such as `DUCK DUCK DUCK GOOSE`, `TIC TAC TOE`,
+and `HIP HIP HOORAY`. Students build three-word contexts, integer tensors, 2D token
+and positional embeddings, a flattened six-number input, one ReLU hidden layer,
+and next-word logits. Every exercise states the exact PyTorch API and arguments.
+Visuals cover data windows, architecture, probabilities, loss, accuracy, learned
+embeddings, position vectors, and generated chants.
+
 ## Notebook 3 — a transformer from components
 
 **Question:** What exactly happens inside one transformer block?
